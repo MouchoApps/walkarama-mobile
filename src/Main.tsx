@@ -24,12 +24,20 @@ export default TabNavigator(
           source = focused ? require('./assets/trophy.png') : require('./assets/trophy-white.png')
         }
 
-        return <Image style={{ marginTop: 20 }} source={source} />
+        return <Image source={source} />
       }
     }),
     tabBarOptions: {
       activeTintColor: '#FF087A',
-      inactiveTintColor: 'gray'
+      inactiveTintColor: 'gray',
+      iconStyle: {
+        paddingTop: 0,
+        paddingBottom: 50
+      },
+      showLabel: false,
+      indicatorStyle: {
+        backgroundColor: 'transparent'
+      }
     },
     tabBarComponent: TabBarBottom,
     tabBarPosition: 'bottom',

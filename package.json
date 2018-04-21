@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "devDependencies": {
+    "@types/expo": "^25.0.4",
     "@types/jest": "^22.2.2",
     "@types/react": "^16.1.0",
     "@types/react-native": "^0.52.21",
@@ -52,6 +53,7 @@
   },
   "dependencies": {
     "@expo/vector-icons": "^6.3.1",
+    "axios": "^0.18.0",
     "expo": "^26.0.0",
     "react": "16.3.0-alpha.1",
     "react-native": "0.54.0",

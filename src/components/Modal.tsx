@@ -1,17 +1,19 @@
 import React, { Component } from 'react'
-import { Modal as NativeModal } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 
-export default class Modal extends Component<{ isVisible: boolean, onClose: () => void }> {
+export default class Modal extends Component<{ isVisible: boolean; onClose: () => void }> {
   render() {
-    return (
-      <NativeModal
-        animationType="slide"
-        transparent={false}
-        visible={this.props.isVisible}
-        onRequestClose={this.props.onClose}
-      >
-        {this.props.children}
-      </NativeModal>
-    )
+    return this.props.isVisible ? (
+      <View style={styles.modal}>
+        <View style={{ margin: 24 }}>{this.props.children}</View>
+      </View>
+    ) : null
   }
 }
+
+const styles = StyleSheet.create({
+  modal: {
+    zIndex: 999,
+    backgroundColor: 'white'
+  }
+})
