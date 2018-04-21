@@ -21,6 +21,10 @@ interface IMarker {
 }
 
 export default class WorldView extends Component<{}> {
+  static navigationOptions = {
+    title: 'World'
+  }
+
   state = {
     region: {
       latitude: LATITUDE,
@@ -47,7 +51,7 @@ export default class WorldView extends Component<{}> {
     return (
       <View style={styles.container}>
         <MapView style={styles.map} initialRegion={this.state.region} onPress={e => this.onMapPress(e)}>
-          { this.state.markers.map((marker: IMarker) => (
+          {this.state.markers.map((marker: IMarker) => (
             <Marker key={marker.key} coordinate={marker.coordinate} pinColor={marker.color} />
           ))}
         </MapView>
