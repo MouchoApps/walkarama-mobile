@@ -1,10 +1,11 @@
 import React, { Component } from 'react'
 import MapView, { Marker } from 'react-native-maps'
-import { Dimensions, StyleSheet, Text, View } from 'react-native'
+import { AsyncStorage, Dimensions, StyleSheet, Text, View } from 'react-native'
 import Modal from '../../components/Modal'
 import { ILocation } from '../../models/ILocation'
 import { Pedometer } from 'expo'
 import { EventSubscription } from 'fbemitter'
+import { NavigationScreenProp } from 'react-navigation'
 
 const { width, height } = Dimensions.get('window')
 
@@ -21,7 +22,7 @@ interface IMarker {
   coordinate: ILocation
 }
 
-export default class WorldView extends Component<{}> {
+export default class WorldView extends Component<{navigation: NavigationScreenProp<any>}> {
   static navigationOptions = {
     title: 'World'
   }
@@ -76,7 +77,6 @@ export default class WorldView extends Component<{}> {
           <Modal isVisible={!this.state.citySelected} onClose={() => null}>
             <Text>Where do you want to walk?</Text>
             <Text>Select a destination city to walk towards</Text>
-            <Text>{this.state.steps}</Text>
           </Modal>
         ) : null}
 

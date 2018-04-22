@@ -1,10 +1,12 @@
 import React from 'react'
-import { TabBarBottom, TabNavigator } from 'react-navigation'
+import { StackNavigator, SwitchNavigator, TabBarBottom, TabNavigator } from 'react-navigation'
 import WorldView from './domains/world/WorldView'
 import AchievementsView from './domains/achievements/AchievementsView'
 import { Image } from 'react-native'
+import LoginView from './domains/login/LoginView'
+import AuthLoading from './domains/login/AuthLoading'
 
-export default TabNavigator(
+const appStack = TabNavigator(
   {
     WorldView: {
       screen: WorldView
@@ -45,3 +47,18 @@ export default TabNavigator(
     swipeEnabled: false
   }
 )
+
+const authStack = StackNavigator(
+  {
+    LoginView: {
+      screen: LoginView
+    }
+  },
+  { headerMode: 'screen' }
+)
+
+export default SwitchNavigator({
+  AuthLoading,
+  App: appStack,
+  Auth: authStack
+})
