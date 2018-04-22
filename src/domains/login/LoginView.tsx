@@ -3,6 +3,7 @@ import { AsyncStorage, StyleSheet, Text, View } from 'react-native'
 import Button from '../../components/Button'
 import { NavigationScreenProp } from 'react-navigation'
 import { getUuid } from './uuidGenerator'
+import { createUser } from './services/userService'
 
 export default class LoginView extends Component<{ navigation: NavigationScreenProp<any> }> {
   static navigationOptions = {
@@ -10,7 +11,9 @@ export default class LoginView extends Component<{ navigation: NavigationScreenP
   }
 
   private async login() {
-    await AsyncStorage.setItem('userToken', getUuid());
+    const id = getUuid()
+    createUser(id)
+    await AsyncStorage.setItem('userToken', id);
     this.props.navigation.navigate('App');
   }
 

@@ -1,11 +1,13 @@
 import React, { Component } from 'react'
 import MapView, { Marker } from 'react-native-maps'
-import { AsyncStorage, Dimensions, StyleSheet, Text, View } from 'react-native'
+import { Alert, AsyncStorage, Dimensions, StyleSheet, Text, View } from 'react-native'
 import Modal from '../../components/Modal'
 import { ILocation } from '../../models/ILocation'
 import { Pedometer } from 'expo'
 import { EventSubscription } from 'fbemitter'
 import { NavigationScreenProp } from 'react-navigation'
+import { postLocation } from './services/locationService'
+import { stepsToMeters } from './geoLocation'
 
 const { width, height } = Dimensions.get('window')
 
@@ -22,7 +24,7 @@ interface IMarker {
   coordinate: ILocation
 }
 
-export default class WorldView extends Component<{navigation: NavigationScreenProp<any>}> {
+export default class WorldView extends Component<{ navigation: NavigationScreenProp<any> }> {
   static navigationOptions = {
     title: 'World'
   }
@@ -39,37 +41,79 @@ export default class WorldView extends Component<{navigation: NavigationScreenPr
     },
     steps: 0,
     markers: [],
-    errorMessage: null
+    errorMessage: null,
+    uuid: ''
   }
 
   componentDidMount() {
     this.subscribePedometer()
+    this.getUuid()
   }
 
-  subscribePedometer = () => {
+  private async getUuid() {
+    const userToken = await AsyncStorage.getItem('userToken')
+    console.log(userToken)
+    this.setState({
+      uuid: userToken
+    })
+  }
+
+  private subscribePedometer = () => {
+    // AsyncStorage.clear();
     this.subscription = Pedometer.watchStepCount(result => {
+      postLocation(this.state.uuid, stepsToMeters(this.state.steps))
       this.setState({
         steps: result.steps
       })
     })
   }
 
-  onMapPress(e: any) {
+  private onMapPress(e: any) {
     // Once we press the map we assume the city is selected
     this.setState({ citySelected: true })
 
-    // Place the marker
-    this.setState({
-      markers: [
-        ...this.state.markers,
-        {
-          coordinate: e.nativeEvent.coordinate,
-          key: id++,
-          color: 'red'
-        }
-      ]
-    })
+    if (this.state.markers.length === 2) {
+      Alert.alert(
+        'Select new destination',
+        'Are you sure you want to change the origin and the destination markers? This will delete your current progress',
+        [
+          {
+            text: 'Cancel',
+            onPress: () => {}
+          },
+          {
+            text: 'Ok',
+            onPress: () => {
+              this.setState({ markers: [] })
+
+              this.setState({
+                markers: [
+                  ...this.state.markers,
+                  {
+                    coordinate: e.nativeEvent.coordinate,
+                    key: id++,
+                    color: 'red'
+                  }
+                ]
+              })
+            }
+          }
+        ]
+      )
+    } else {
+      this.setState({
+        markers: [
+          ...this.state.markers,
+          {
+            coordinate: e.nativeEvent.coordinate,
+            key: id++,
+            color: 'red'
+          }
+        ]
+      })
+    }
   }
+
   render() {
     return (
       <View style={styles.container}>
